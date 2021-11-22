@@ -1,14 +1,14 @@
-//SPDX-License-Identifier: <SPDX-License>
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./MockToken.sol";
 contract Contribution{
   MockToken public tokenContract;
   mapping(address => uint) public ContributionList;
-  event Received(address Contributor, uint totalContribution);
+  event Received(address contributor, uint totalContribution);
 
 //constructor is initialized with mockToken address
-    constructor(MockToken _mockToken)  public{
+    constructor(MockToken _mockToken){
       tokenContract = _mockToken;
 }
 //safe multiplication. Takes two integers as input
@@ -28,7 +28,7 @@ function multiply(uint a,uint b) internal pure returns (uint c){
    ContributionList[msg.sender] += msg.value;
  }
 //Takes an address as input. returns total Contribution of user
- function checkTotalContribution(address _Contributor) public returns(uint) {
+ function checkTotalContribution(address _Contributor) public view returns(uint) {
    uint ethContribution = ContributionList[_Contributor];
    return ethContribution;
  }
