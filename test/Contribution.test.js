@@ -37,8 +37,8 @@ contract('Contribution', function(accounts){
       assert.equal(mockToken.address, mockTokenAddress)
       const tokenBalance = await mockToken.balanceOf(contributionContract.address)
       console.log(tokenBalance.toNumber())
-    })
-  })
+    });
+  });
 //Test for receieve() fallback function
     describe('recieve()', async () =>{
       //test for failed transaction. Not enough tokens in contract
@@ -59,8 +59,8 @@ contract('Contribution', function(accounts){
     })
     //check for totalDonation of accounts 3
     it('updates donator list', async () =>{
-      const ethDonation = await contributionContract.DonatorList(accounts[3])
-      assert.equal(ethDonation.toNumber(), 5)
+      const ethContribution = await contributionContract.ContributionList(accounts[3])
+      assert.equal(ethContribution.toNumber(), 5)
     })
     // it('emits recieve event', async () =>{
     // const event = result.logs[0].args
@@ -68,7 +68,13 @@ contract('Contribution', function(accounts){
     // assert.equal(event.totalDonation, 5, 'Logs correct donation amount')
     // })
   })
-
+  describe('checkTotalContribution()', async () =>{
+    //test for failed transaction. Not enough tokens in contract
+    it("logs users contribution", async () => {
+      const ethContribution = await contributionContract.checkTotalContribution.call(accounts[3], {from:accounts[1]})
+      assert.equal(ethContribution, 5)
+  });
+});
 
 
 })
