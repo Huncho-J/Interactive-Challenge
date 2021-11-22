@@ -15,9 +15,9 @@ contract('Contribution', function(accounts){
     mockToken = await MockToken.deployed()
     contributionContract = await ContributionContract.deployed(mockToken.address)
     result = await web3.eth.sendTransaction({
-      from: accounts[3],
+      from: accounts[4],
       to: contributionContract.address,
-      value:'5'
+      value:'10'
     })
   })
 
@@ -41,6 +41,7 @@ contract('Contribution', function(accounts){
   });
 //Test for receieve() fallback function
     describe('recieve()', async () =>{
+      })
       //test for failed transaction. Not enough tokens in contract
       it("should not be able to send more than the availble token balance", async () => {
         await truffleAssert.reverts(
@@ -53,28 +54,21 @@ contract('Contribution', function(accounts){
         );
     });
     //check for successful transfer after donation
-    it('transfers tokens to donator', async () =>{
-      const donatorBal =  await mockToken.balanceOf(accounts[3])
-      assert.equal(donatorBal.toNumber(), 10)
+    it('transfers tokens to contributor', async () =>{
+      const contributorBal =  await mockToken.balanceOf(accounts[4])
+      assert.equal(contributorBal.toNumber(), 20)
     })
     //check for totalDonation of accounts 3
     it('updates donator list', async () =>{
-      const ethContribution = await contributionContract.ContributionList(accounts[3])
-      assert.equal(ethContribution.toNumber(), 5)
+      const ethContribution = await contributionContract.ContributionList(accounts[4])
+      assert.equal(ethContribution.toNumber(), 10)
     })
-    // it('emits recieve event', async () =>{
-    // const event = result.logs[0].args
-    // assert.equal(event.donator, accounts[3], 'Logs the correct account')
-    // assert.equal(event.totalDonation, 5, 'Logs correct donation amount')
-    // })
+    describe('checkTotalContribution()', async () =>{
+      //test for failed transaction. Not enough tokens in contract
+      it("logs users contribution", async () => {
+        const ethContribution = await contributionContract.checkTotalContribution.call(accounts[4], {from:accounts[1]})
+        assert.equal(ethContribution, 10)
+    });
   })
-  describe('checkTotalContribution()', async () =>{
-    //test for failed transaction. Not enough tokens in contract
-    it("logs users contribution", async () => {
-      const ethContribution = await contributionContract.checkTotalContribution.call(accounts[3], {from:accounts[1]})
-      assert.equal(ethContribution, 5)
-  });
+
 });
-
-
-})
