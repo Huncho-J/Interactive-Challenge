@@ -9,7 +9,7 @@ contract('MockToken', function(accounts){
 // build up new contracts before each test
   let mockToken
 
-  before(async () => {
+  beforeEach(async () => {
     mockToken = await MockToken.deployed()
   })
 
@@ -23,7 +23,17 @@ contract('MockToken', function(accounts){
       assert.notEqual(address, null)
       assert.notEqual(address, undefined)
     })
+    it('is paused', async () => {
+       await mockToken.pause.call()
+       const status = await mockToken.paused()
+      assert.equal(status, true)
+    })
 
+    it('is unpaused', async () => {
+      await mockToken.unpause.call()
+      const status = await mockToken.paused()
+      assert.equal(status, false)
+    })
 
 })
 })
