@@ -25,7 +25,7 @@ contract MockToken is ERC20, Pausable, Ownable{
         _unpause();
     }
 //override _beforeTransferFunction to only be called when not paused
-function _beforeTokenTransfer(address from, address to, uint256 amount) internal
+function _beforeTokenTransfer(address from, address to, uint amount) internal
         whenNotPaused
         override
     {
