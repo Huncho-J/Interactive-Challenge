@@ -17,7 +17,7 @@ function multiply(uint a,uint b) internal pure returns (uint c){
   }
 
 //recieves eth & sends out mockTokens at the rate of msg.value * 2
- receive() external payable {
+ function sendEth() public payable {
    //Ensure contract has enough tokens for transfer
    require(tokenContract.balanceOf(address(this)) >  multiply(msg.value,2),"Not enough tokens in contract");
    //transfer tokens to Contributor
