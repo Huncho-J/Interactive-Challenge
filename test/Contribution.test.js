@@ -2,7 +2,10 @@
 const ContributionContract = artifacts.require("./Contribution.sol");
 const MockToken = artifacts.require("./MockToken.sol");
 
-const assert = require("chai").assert;
+require("chai")
+  .use(require('chai-as-promised'))
+  .should()
+  
 const truffleAssert = require('truffle-assertions');
 
 function tokens(n){
@@ -36,24 +39,23 @@ contract('Contribution', function(accounts){
       assert.equal(mockToken.address, mockTokenAddress)
       //has tokens
       const tokenBalance = await mockToken.balanceOf(contributionContract.address)
-      console.log(tokenBalance.toString(), tokens('100000'))
     });
   });
 //Test for receieve() fallback function
-    describe('recieve()', async () =>{
-      })
-      //test for failed transaction. Not enough tokens in contract
-    //   it("should not be able to send more than the availble token balance", async () => {
-    //     await truffleAssert.reverts(
-    //       web3.eth.sendTransaction({
-    //         from: accounts[2],
-    //         to: contributionContract.address,
-    //         value:'5000000000'
-    //       }),
-    //         "Not enough tokens in contract"
-    //     );
-    // });
-    //check for successful transfer after donation
+    describe('sendEth()', async () =>{
+      let result
+      before(async () => {
+        result = await contributionContract.sendEth({from:accounts[3], value:web3.utils.toWei('1','ether')})
+        })
+      it("emits eth recieved event", async () => {
+        event = result.logs[0].args
+        assert.equal(event.contributor, accounts[3], 'Logs the correct  account')
+
+        //should not accept contribution is MockToken balance is low
+       await contributionContract.sendEth({from:accounts[3], value:web3.utils.toWei('5000000','ether')}).should.be.rejected
+        });
+      });
+    //check for successful transfer of mockToken after contribution
     it('transfers tokens to contributor', async () =>{
       const contributorBal =  await mockToken.balanceOf(accounts[2])
       assert.equal(contributorBal.toString(), tokens('4'))
@@ -64,10 +66,6 @@ contract('Contribution', function(accounts){
         const ethContribution = await contributionContract.checkTotalContribution.call(accounts[2], {from:accounts[1]})
         assert.equal(ethContribution.toString(), tokens('2'))
     });
-    it("emits events", async () => {
-      const event = res.log[0].args
-      assert.equal(event.contributor, accounts[2], 'Logs the correct  account')
-      });
-    });
+})
 
 });
