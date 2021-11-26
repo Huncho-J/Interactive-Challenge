@@ -10,7 +10,7 @@ contract MockToken is ERC20, Pausable, Ownable{
     uint256 public endTime;
 
     constructor(uint _startTime, uint _endTime)  ERC20("TOKEN", "TKN") {
-     _mint(msg.sender,100000);
+     _mint(msg.sender,1000000000000000000000000);
       startTime = _startTime;
       endTime = _endTime;
     }
