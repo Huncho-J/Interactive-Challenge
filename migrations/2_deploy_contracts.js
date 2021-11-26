@@ -8,8 +8,8 @@ function tokens(n){
 module.exports = async  function (deployer) {
   //load preset accounts from Ganache
   const accounts = await web3.eth.getAccounts();
-  //deploy token contract
-  await deployer.deploy(MockToken,1637613758, 1637614058);
+  //deploy token contract with start and endTime in
+  await deployer.deploy(MockToken,1637613758, 1637937395);
   const mockTokenContract = await MockToken.deployed();
 
   //deploy ContributionContract
