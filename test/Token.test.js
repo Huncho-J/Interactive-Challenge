@@ -7,10 +7,11 @@ const truffleAssert = require('truffle-assertions');
 contract('MockToken', function(accounts){
 
 // build up new contracts before each test
-  let mockToken
+  let mockToken, res
 
-  beforeEach(async () => {
+  before(async () => {
     mockToken = await MockToken.deployed()
+    res = await mockToken.pause({from:accounts[0]})
   })
 
 //check for successful deployment
@@ -23,17 +24,16 @@ contract('MockToken', function(accounts){
       assert.notEqual(address, null)
       assert.notEqual(address, undefined)
     })
-    // it('is paused', async () => {
-    //    await mockToken.pause.call()
-    //    const status = await mockToken.paused()
-    //   assert.equal(status, true)
-    // })
-    //
-    // it('is unpaused', async () => {
-    //   await mockToken.unpause.call()
-    //   const status = await mockToken.paused()
-    //   assert.equal(status, false)
-    // })
+    it('Check paused contract', async () => {
+      event = res.logs[0].args
+      assert.equal(event.status,true, 'Logs the correct status: Paused')
+    })
+
+    it('Check unpaused contract', async () => {
+      res = await mockToken.unpause({from:accounts[0]})
+      event = res.logs[0].args
+      assert.equal(event.status,false, 'Logs the correct status: unPaused')
+    })
 
 })
 })
